@@ -8,7 +8,7 @@
 	"src": "src",
 	"css": "css"
     },
-    "main": "src/sort-chidlren.js",
+    "main": "src/sort-children.js",
 
     "repository": {
 	"type": "git",
