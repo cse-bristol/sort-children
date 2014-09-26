@@ -74,12 +74,14 @@ module.exports = function(selection, callback) {
 		};
 	    })
 	    .on("dragstart", function(d, i) {
-		console.log(d);
+		d3.event.stopPropagation();
 		startIndex = findChildIndex(this);
 		height = this.offsetHeight + "px";
 		d3.select(this).style("pointer-events", "none");
 	    })
 	    .on("drag", function(d, i) {
+		d3.event.stopPropagation();
+
 		if (displaced) {
 		    displaced
 			.style("position", null)
@@ -110,6 +112,8 @@ module.exports = function(selection, callback) {
 			.style("top", movedDown ? "-" + height : height);
 	    })
 	    .on("dragend", function(d, i) {
+		d3.event.stopPropagation();
+
 		var parent = this.parentNode;
 
 		d3.select(parent)
