@@ -1,0 +1,20 @@
+{
+    "name": "sort-children",
+    "version": "0.1.0",
+    "description": "Sort the children of an HTML element using the d3 drag behaviour.",
+    "keywords": ["sort", "d3"],
+
+    "directories": {
+	"src": "src",
+	"css": "css"
+    },
+    "main": "src/sort-chidlren.js",
+
+    "repository": {
+	"type": "git",
+	"url": "https://github.com/cse-bristol/sort-children.git"
+    },
+    "dependencies": {
+	"d3": "3.4.11"
+    }
+}
