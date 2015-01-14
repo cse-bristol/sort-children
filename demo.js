@@ -5,9 +5,6 @@
 var d3 = require("d3"),
     sortChildren = require("./src/sort-children.js"),
     body = d3.select(document.body),
-    movedEl = body.append("div"),
-    movedDownEl = body.append("div"),
-    displacedEl = body.append("ul"),
     data = "abcdefghi",
     list = body.selectAll("div")
 	.data(
@@ -27,7 +24,10 @@ var d3 = require("d3"),
 	.style("font-family", "monospace")
 	.text(function(d, i) {
 	    return d;
-	});
+	}),
+    movedEl = body.append("div"),
+    movedDownEl = body.append("div"),
+    displacedEl = body.append("ul");
 	
 sortChildren(newList, function(moved, movedDown, displaced){
     movedEl.text(d3.select(moved).datum());
