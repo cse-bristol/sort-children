@@ -3,10 +3,11 @@
 /*global module, require*/
 
 var d3 = require("d3"),
-    sortChildren = require("./src/sort-children.js"),
+    sortChildren = require("./js/sort-children.js"),
     body = d3.select(document.body),
+    listContainer = body.append("div"),
     data = "abcdefghi",
-    list = body.selectAll("div")
+    list = listContainer.selectAll("div")
 	.data(
 	    data,
 	    function(d, i) {
@@ -25,24 +26,8 @@ var d3 = require("d3"),
 	.text(function(d, i) {
 	    return d;
 	}),
-    movedEl = body.append("div"),
-    movedDownEl = body.append("div"),
-    displacedEl = body.append("ul");
+    movedEl = body.append("div");
 	
-sortChildren(newList, function(moved, movedDown, displaced){
-    movedEl.text(d3.select(moved).datum());
-    movedDownEl.text(movedDown ? "down" : "up");
-    var li = displacedEl.selectAll("li")
-	.data(
-	    displaced.data(), 
-	    function(d, i) {
-		return d;
-	    }
-	);
-
-    li.exit().remove();
-    li.enter().append("li")
-	.text(function(d, i) {
-	    return d;
-	});
+sortChildren(newList, function(moved, from, to) {
+    movedEl.text("Moved " + d3.select(moved).datum() + " from " + from + " to " + to + ".");
 });

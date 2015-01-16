@@ -5,10 +5,10 @@
     "keywords": ["sort", "d3"],
 
     "directories": {
-	"src": "src",
+	"js": "js",
 	"css": "css"
     },
-    "main": "src/sort-children.js",
+    "main": "js/sort-children.js",
 
     "repository": {
 	"type": "git",

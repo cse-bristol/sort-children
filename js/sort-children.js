@@ -128,6 +128,8 @@ module.exports = function(selection, callback) {
 		if (!target || target === this) {
 		    // NO-OP: missed the list
 		} else {
+		    var startPosition = Array.prototype.indexOf.call(parent.children, this);
+		    
 		    parent.removeChild(this);
 
 		    if (movedDown) {
@@ -142,7 +144,11 @@ module.exports = function(selection, callback) {
 		    }
 
 		    if (callback) {
-			callback(this, movedDown, displaced);
+			callback(
+			    this,
+			    startPosition,
+			    Array.prototype.indexOf.call(parent.children, this)
+			);
 		    }
 		}
 	    });
