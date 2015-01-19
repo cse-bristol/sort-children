@@ -15,6 +15,6 @@
 	"url": "https://github.com/cse-bristol/sort-children.git"
     },
     "dependencies": {
-	"d3": "3.4.13"
+	"d3": "3.5.3"
     }
 }
