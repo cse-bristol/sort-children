@@ -5,14 +5,6 @@
 var d3 = require("d3"),
     dragClass = "drag-reorder";
 
-/*
- Adds d3 drag behaviour to statically positioned elements.
- When dropped, if they are dropped onto an element in the same parent container, they will move above that element in the list.
- This may push all the other children in the container around.
-
- The elements will be moved at the end of the drag action.
- */
-
 var findChildIndex = function(node) {
     var i = 1;
     while ((node = node.previousElementSibling)) {
@@ -38,6 +30,15 @@ var findSiblingsBetween = function(first, second) {
     return siblings;
 };
 
+/*
+ Adds d3 drag behaviour to statically positioned elements.
+ When dropped, if they are dropped onto an element in the same parent container, they will move above that element in the list.
+ This may push all the other children in the container around.
+
+ The elements will be moved at the end of the drag action.
+
+ You may call this multiple times to add the drag handler to elements which have been added to the parent node.
+ */
 module.exports = function(selection, callback) {
     var startIndex,
 	height,
@@ -47,20 +48,21 @@ module.exports = function(selection, callback) {
 
 	findDragTarget = function(parent, draggingElement) {
 	    var draggingMid = draggingElement.offsetTop + (draggingElement.offsetHeight / 2),
-		target = selection.filter(
-		    function(d, i) {
-			var ourBottom = this.offsetTop + this.offsetHeight;
-			
-			if (this === draggingElement) {
-			    return false;
+		target = parent.selectAll("." + dragClass)
+		    .filter(
+			function(d, i) {
+			    var ourBottom = this.offsetTop + this.offsetHeight;
 			    
-			} else {
-			    // The middle of the element being dragged is between our top and our bottom.
-			    return (ourBottom > draggingMid) &&
-				(this.offsetTop < draggingMid);
+			    if (this === draggingElement) {
+				return false;
+				
+			    } else {
+				// The middle of the element being dragged is between our top and our bottom.
+				return (ourBottom > draggingMid) &&
+				    (this.offsetTop < draggingMid);
+			    }
 			}
-		    }
-	    );
+		    );
 	    
 	    if (target.empty()) {
 		return null;
