@@ -151,6 +151,11 @@ module.exports = function(selection, callback) {
 			);
 		    }
 		}
+
+		startIndex = null,
+		height = null,
+		target = null,
+		displaced = null;
 	    });
 
     selection
