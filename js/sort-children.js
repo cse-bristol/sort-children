@@ -48,7 +48,8 @@ module.exports = function(selection, callback) {
 
 	findDragTarget = function(parent, draggingElement) {
 	    var draggingMid = draggingElement.offsetTop + (draggingElement.offsetHeight / 2),
-		target = parent.selectAll("." + dragClass)
+		target = d3.select(parent)
+		    .selectAll("." + dragClass)
 		    .filter(
 			function(d, i) {
 			    var ourBottom = this.offsetTop + this.offsetHeight;
