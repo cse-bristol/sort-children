@@ -22,26 +22,6 @@ var findChildIndex = function(node) {
     return i;
 };
 
-var findDragTarget = function() {
-    var target = document.elementFromPoint(
-	d3.event.sourceEvent.clientX, 
-	d3.event.sourceEvent.clientY);
-
-    while (target) {
-	if (target === document) {
-	    return null;
-	}
-
-	var targetSelection = d3.select(target);
-	if (targetSelection.classed(dragClass)) {
-	    return target;
-	} else {
-	    target = target.parentNode;
-	}
-    }
-    return null;
-};
-
 var findSiblingsBetween = function(first, second) {
     if (!first || !second) {
 	return [];
@@ -64,9 +44,32 @@ module.exports = function(selection, callback) {
 	movedDown,
 	target,
 	displaced,
-	toClear = d3.set();
 
-    var dragSort = d3.behavior.drag()
+	findDragTarget = function(parent, draggingElement) {
+	    var draggingMid = draggingElement.offsetTop + (draggingElement.offsetHeight / 2),
+		target = selection.filter(
+		    function(d, i) {
+			var ourBottom = this.offsetTop + this.offsetHeight;
+			
+			if (this === draggingElement) {
+			    return false;
+			    
+			} else {
+			    // The middle of the element being dragged is between our top and our bottom.
+			    return (ourBottom > draggingMid) &&
+				(this.offsetTop < draggingMid);
+			}
+		    }
+	    );
+	    
+	    if (target.empty()) {
+		return null;
+
+	    } else
+		return target[0][0];
+	},
+
+	dragSort = d3.behavior.drag()
 	    .origin(function(d, i) {
 		return {
 		    x: 0,
@@ -75,19 +78,20 @@ module.exports = function(selection, callback) {
 	    })
 	    .on("dragstart", function(d, i) {
 		d3.event.sourceEvent.stopPropagation();
+		d3.event.sourceEvent.preventDefault();
 
 		startIndex = findChildIndex(this);
 		height = this.offsetHeight + "px";
-		d3.select(this).style("pointer-events", "none");
 	    })
 	    .on("drag", function(d, i) {
 		d3.event.sourceEvent.stopPropagation();
-
+		d3.event.sourceEvent.preventDefault();
+		
 		if (displaced) {
 		    displaced
-			.style("position", null)
-			.style("left", null)
-			.style("top", null);
+	    		.style("position", null)
+	    		.style("left", null)
+	    		.style("top", null);
 		}
 		
 		d3.select(this)
@@ -96,24 +100,23 @@ module.exports = function(selection, callback) {
 		    .style("left", d3.event.x + "px");
 
 		movedDown = d3.event.y > 0;
-		target = findDragTarget();
+		target = findDragTarget(this.parentNode, this);
 
-		if (target === this) {
-		    return;
+		if (target) {
+		    displaced = d3.selectAll(
+	    		movedDown ? 
+	    		    findSiblingsBetween(this, target).concat([target]) :
+	    		    [target].concat(findSiblingsBetween(target, this)))
+	    		.filter(function(d, i) {
+	    		    return d3.select(this).classed(dragClass);
+	    		})
+	    		.style("position", "relative")
+	    		.style("top", movedDown ? "-" + height : height);
 		}
-
-		displaced = d3.selectAll(
-		    movedDown ? 
-			findSiblingsBetween(this, target).concat([target]) :
-			[target].concat(findSiblingsBetween(target, this)))
-			.filter(function(d, i) {
-			    return d3.select(this).classed(dragClass);
-			})
-			.style("position", "relative")
-			.style("top", movedDown ? "-" + height : height);
 	    })
 	    .on("dragend", function(d, i) {
 		d3.event.sourceEvent.stopPropagation();
+		d3.event.sourceEvent.preventDefault();
 
 		var parent = this.parentNode;
 
@@ -123,11 +126,7 @@ module.exports = function(selection, callback) {
 		    .style("left", null)
 		    .style("top", null);
 
-		d3.select(this).style("pointer-events", null);
-
-		if (!target || target === this) {
-		    // NO-OP: missed the list
-		} else {
+		if (target) {
 		    var startPosition = Array.prototype.indexOf.call(parent.children, this);
 		    
 		    parent.removeChild(this);

@@ -23,11 +23,14 @@ var d3 = require("d3"),
 	.style("width", "1em")
 	.style("text-align", "center")
 	.style("font-family", "monospace")
+	.on("click", function(d, i) {
+	    result.text("Clicked " + d);
+	})
 	.text(function(d, i) {
 	    return d;
 	}),
-    movedEl = body.append("div");
+    result = body.append("div");
 	
 sortChildren(newList, function(moved, from, to) {
-    movedEl.text("Moved " + d3.select(moved).datum() + " from " + from + " to " + to + ".");
+    result.text("Moved " + d3.select(moved).datum() + " from " + from + " to " + to + ".");
 });
