@@ -51,11 +51,19 @@ module.exports = function(selection, callback) {
 
 	    if (movedDown && draggingMid > parent.offsetTop + parent.offsetHeight) {
 		// We gone past the bottom of the parent.
-		return parent.lastElementChild;
+		if (parent.lastElementChild === draggingElement) {
+		    return null;
+		} else {
+		    return parent.lastElementChild;
+		}
 	    }
 
 	    if (!movedDown && draggingMid < parent.offsetTop) {
-		return parent.firstElementChild;
+		if (parent.firstElementChild === draggingElement) {
+		    return null;
+		} else {
+		    return parent.firstElementChild;
+		}
 	    }
 	    
 	    var matching = d3.select(parent)
