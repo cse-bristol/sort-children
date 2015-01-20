@@ -47,29 +47,39 @@ module.exports = function(selection, callback) {
 	displaced,
 
 	findDragTarget = function(parent, draggingElement) {
-	    var draggingMid = draggingElement.offsetTop + (draggingElement.offsetHeight / 2),
-		target = d3.select(parent)
-		    .selectAll("." + dragClass)
-		    .filter(
-			function(d, i) {
-			    var ourBottom = this.offsetTop + this.offsetHeight;
-			    
-			    if (this === draggingElement) {
-				return false;
-				
-			    } else {
-				// The middle of the element being dragged is between our top and our bottom.
-				return (ourBottom > draggingMid) &&
-				    (this.offsetTop < draggingMid);
-			    }
-			}
-		    );
+	    var draggingMid = draggingElement.offsetTop + (draggingElement.offsetHeight / 2);
+
+	    if (movedDown && draggingMid > parent.offsetTop + parent.offsetHeight) {
+		// We gone past the bottom of the parent.
+		return parent.lastElementChild;
+	    }
+
+	    if (!movedDown && draggingMid < parent.offsetTop) {
+		return parent.firstElementChild;
+	    }
 	    
-	    if (target.empty()) {
+	    var matching = d3.select(parent)
+		.selectAll("." + dragClass)
+		.filter(
+		    function(d, i) {
+			var ourBottom = this.offsetTop + this.offsetHeight;
+			
+			if (this === draggingElement) {
+			    return false;
+			    
+			} else {
+			    // The middle of the element being dragged is between our top and our bottom.
+			    return (ourBottom > draggingMid) &&
+				(this.offsetTop < draggingMid);
+			}
+		    }
+		);
+	    
+	    if (matching.empty()) {
 		return null;
 
 	    } else
-		return target[0][0];
+		return matching[0][0];
 	},
 
 	dragSort = d3.behavior.drag()
