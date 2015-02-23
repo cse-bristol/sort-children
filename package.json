@@ -1,8 +1,8 @@
 {
     "name": "sort-children",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "description": "Sort the children of an HTML element using the d3 drag behaviour.",
-    "keywords": ["sort", "d3"],
+    "keywords": ["sort", "drag", "drop", "d3"],
 
     "directories": {
 	"js": "js",
