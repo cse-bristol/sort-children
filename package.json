@@ -4,6 +4,11 @@
     "description": "Sort the children of an HTML element using the d3 drag behaviour.",
     "keywords": ["sort", "drag", "drop", "d3"],
 
+    "repository": {
+	"type": "git",
+	"url": "git://github.com/cse-bristol/sort-children.git"
+    },
+    
     "directories": {
 	"js": "js",
 	"css": "css"
